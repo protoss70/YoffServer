@@ -1,11 +1,10 @@
 import express, { Request, Response } from 'express';
 import User, { IUser } from '../models/User'; // Adjust the import path as needed
-import { isAuth } from '../middleware/isAuth';
 
 const router = express.Router();
 
 // Find or Create User Route
-router.post('/findOrCreate', isAuth, async (req: Request, res: Response) => {
+router.post('/findOrCreate', async (req: Request, res: Response) => {
   const { email } = req.body;
 
   try {

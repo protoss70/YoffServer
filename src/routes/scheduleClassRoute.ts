@@ -1,11 +1,10 @@
 import express, { Request, Response } from 'express';
 import ScheduledClass, { IScheduleClass } from '../models/ScheduleClass'; // Adjust the import path
-import { isAuth } from '../middleware/isAuth'; // Import your authentication middleware
 
 const router = express.Router();
 
 // Create a Scheduled Class
-router.post('/', isAuth, async (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
   const { date, teacher, user } = req.body;
 
   try {
@@ -29,7 +28,7 @@ router.post('/', isAuth, async (req: Request, res: Response) => {
 });
 
 // Delete a Scheduled Class
-router.delete('/:id', isAuth, async (req: Request, res: Response) => {
+router.delete('/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
@@ -53,7 +52,7 @@ router.delete('/:id', isAuth, async (req: Request, res: Response) => {
 });
 
 // Update a Scheduled Class
-router.put('/:id', isAuth, async (req: Request, res: Response) => {
+router.put('/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   const { date, teacher, user, isCompleted } = req.body;
 

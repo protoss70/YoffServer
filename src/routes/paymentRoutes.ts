@@ -1,11 +1,10 @@
 import express, { Request, Response } from 'express';
 import Payment, { IPayment } from '../models/Payment'; // Adjust the import path
-import { isAuth } from '../middleware/isAuth'; // Import your authentication middleware
 
 const router = express.Router();
 
 // Create a Payment
-router.post('/', isAuth, async (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
   const { amount } = req.body; // Extract the amount from the request body
   const user = res.locals.user; // Get the authenticated user from the middleware
 
