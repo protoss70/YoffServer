@@ -11,5 +11,6 @@
       "src": "dist/app.js",
       "use": "@vercel/node"
     }
-  ]
+  ],
+  "buildCommand": "npm run build"
 }
