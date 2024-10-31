@@ -1,5 +1,11 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
+// Define the structure for the schedule
+interface ISchedule {
+  day: string;
+  hours: string[];
+}
+
 // Define the Teacher interface
 export interface ITeacher extends Document {
   email: string;
@@ -10,6 +16,7 @@ export interface ITeacher extends Document {
   bio: string;
   education: string;
   languages: string[];
+  schedule: ISchedule[];
 }
 
 // Create the Teacher schema
@@ -53,6 +60,16 @@ const TeacherSchema: Schema = new Schema({
   languages: {
     type: [String],
     required: false,
+  },
+  schedule: {
+    type: [
+      {
+        day: { type: String, required: true },
+        hours: { type: [String], required: true },
+      },
+    ],
+    required: false,
+    default: [],
   },
 });
 
