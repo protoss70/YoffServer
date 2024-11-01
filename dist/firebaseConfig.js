@@ -29,7 +29,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const admin = __importStar(require("firebase-admin"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_KEY_BASE64, 'base64').toString());
+const base64String = process.env.FIREBASE_SERVICE_ACCOUNT_KEY_BASE64.replace(/\\n/g, '\n');
+const jsonString = Buffer.from(base64String, 'base64').toString();
+const serviceAccount = JSON.parse(jsonString);
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
