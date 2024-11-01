@@ -3,6 +3,22 @@ import Teacher, { ITeacher } from '../models/Teacher';
 
 const router = express.Router();
 
+// GET /teacher/cards - Get random teacher cards
+router.get('/cards', async (req: Request, res: Response) => {
+  try {
+    const count = parseInt(req.query.count as string, 10) || 1;
+
+    // Get random teachers based on the specified count
+    const teachers: ITeacher[] = await Teacher.aggregate([{ $sample: { size: count } }]);
+
+    res.json(teachers);
+  } catch (error) {
+    console.error('Error fetching teacher cards:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
 // GET /teacher/:id - Get a teacher by ID
 router.get('/:id', async (req: Request, res: Response) => {
   try {
@@ -23,17 +39,22 @@ router.get('/:id', async (req: Request, res: Response) => {
   }
 });
 
-// GET /teacher/cards - Get random teacher cards
-router.get('/cards', async (req: Request, res: Response) => {
+// POST /teacher - Create a new teacher
+router.post('/', async (req: Request, res: Response) => {
   try {
-    const count = parseInt(req.query.count as string, 10) || 1;
+    // Extract teacher data from the request body
+    const teacherData: ITeacher = req.body;
 
-    // Get random teachers based on the specified count
-    const teachers: ITeacher[] = await Teacher.aggregate([{ $sample: { size: count } }]);
+    // Create a new teacher instance
+    const newTeacher = new Teacher(teacherData);
 
-    res.json(teachers);
+    // Save the teacher to the database
+    await newTeacher.save();
+
+    // Send a success response with the created teacher
+    res.status(201).json(newTeacher);
   } catch (error) {
-    console.error('Error fetching teacher cards:', error);
+    console.error('Error creating teacher:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
