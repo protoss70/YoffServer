@@ -8,18 +8,24 @@ const User_1 = __importDefault(require("../models/User")); // Adjust the import 
 const router = express_1.default.Router();
 // Find or Create User Route
 router.post('/findOrCreate', async (req, res) => {
-    const { email } = req.body;
+    const email = res.locals.user?.email;
+    const emailVerified = res.locals.user?.email_verified;
+    if (!email) {
+        console.error('No email found in res.locals.user');
+        return res.status(400).json({ success: false, message: 'Email not found in request' });
+    }
     try {
         // Check if the user exists
         let user = await User_1.default.findOne({ email });
         if (!user) {
-            // If the user does not exist, create a new user with 0 credits
+            console.log('User not found, creating new user...');
             user = await User_1.default.create({
                 email,
                 credits: 0,
-                emailVerified: false,
+                emailVerified: emailVerified || false,
                 demoClass: undefined, // Assuming demoClass can be undefined
             });
+            console.log('Newly created user:', user);
         }
         // Respond with the user data
         res.status(200).json({

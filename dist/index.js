@@ -12,6 +12,7 @@ const paymentRoutes_1 = __importDefault(require("./routes/paymentRoutes"));
 const teacherRoute_1 = __importDefault(require("./routes/teacherRoute"));
 const isAuth_1 = require("./middleware/isAuth");
 const checkUserMatch_1 = require("./middleware/checkUserMatch");
+const db_1 = __importDefault(require("./database/db")); // Import your connectDB function
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 // CORS configuration
@@ -35,9 +36,28 @@ app.use('/api/scheduledClasses', isAuth_1.isAuth, checkUserMatch_1.checkUserMatc
 // Use payment routes
 app.use('/api/payments', isAuth_1.isAuth, checkUserMatch_1.checkUserMatch, paymentRoutes_1.default);
 // Teacher routes without auth
-app.use('/api/teacher', teacherRoute_1.default);
-// Start the server
+app.use('/api/teachers', teacherRoute_1.default);
+// Middleware to log incoming requests
+app.use((req, res, next) => {
+    console.log(`Received request: ${req.method} ${req.url}`);
+    next(); // Call next to proceed to the next middleware or route
+});
+// Custom Error-Handling Middleware
+app.use((err, req, res, next) => {
+    console.error('Error message:', err.message); // Log error message
+    console.error('Stack trace:', err.stack); // Log stack trace
+    res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
+});
+// Connect to the database and then start the server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+console.log('Attempting database connection');
+console.log('MongoDB URI:', process.env.MONGODB_URI);
+console.log('Port:', process.env.PORT);
+(0, db_1.default)().then(() => {
+    console.log('Database connection established');
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}).catch((error) => {
+    console.error('Failed to start the server:', error);
 });
