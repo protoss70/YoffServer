@@ -1,12 +1,13 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application, Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
-import cors from "cors" // Import cors middleware
+import cors from "cors"; // Import cors middleware
 import userRoutes from './routes/userRoutes';
 import scheduledClassRoutes from './routes/scheduleClassRoute';
 import paymentRoutes from './routes/paymentRoutes';
 import teacherRoutes from './routes/teacherRoute';
 import { isAuth } from './middleware/isAuth';
 import { checkUserMatch } from './middleware/checkUserMatch';
+import connectDB from './database/db'; // Import your connectDB function
 
 dotenv.config();
 
@@ -40,10 +41,27 @@ app.use('/api/scheduledClasses', isAuth, checkUserMatch, scheduledClassRoutes);
 app.use('/api/payments', isAuth, checkUserMatch, paymentRoutes);
 
 // Teacher routes without auth
-app.use('/api/teacher', teacherRoutes);
+app.use('/api/teachers', teacherRoutes);
 
-// Start the server
+// Middleware to log incoming requests
+app.use((req: Request, res: Response, next: NextFunction) => {
+  console.log(`Received request: ${req.method} ${req.url}`);
+  next(); // Call next to proceed to the next middleware or route
+});
+
+// Custom Error-Handling Middleware
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error('Error message:', err.message); // Log error message
+  console.error('Stack trace:', err.stack); // Log stack trace
+  res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
+});
+
+// Connect to the database and then start the server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}).catch((error) => {
+  console.error('Failed to start the server:', error);
 });
