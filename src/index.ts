@@ -58,7 +58,11 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 // Connect to the database and then start the server
 const PORT = process.env.PORT || 3000;
+console.log('Attempting database connection');
+console.log('MongoDB URI:', process.env.MONGODB_URI);
+console.log('Port:', process.env.PORT);
 connectDB().then(() => {
+  console.log('Database connection established');
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
