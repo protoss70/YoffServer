@@ -3,6 +3,7 @@ import ScheduledClass, { IScheduleClass } from '../models/ScheduleClass'; // Adj
 import Teacher from '../models/Teacher';
 import { isValidDate, isDateAvailable } from '../utility/scheduleUtils';
 import User from '../models/User';
+import mongoose from 'mongoose';
 
 const router = express.Router();
 
@@ -13,6 +14,12 @@ router.post('/', async (req: Request, res: Response) => {
   const userData = res.locals.userData;
 
   try {
+
+    // Validate ObjectIds
+    if (!mongoose.Types.ObjectId.isValid(teacherId) || !mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ success: false, message: 'Invalid teacherId or userId' });
+    }
+
     // Fetch teacher data using the teacherId
     const teacherData = await Teacher.findById(teacherId);
 
@@ -83,6 +90,12 @@ router.delete('/:id', async (req: Request, res: Response) => {
   const { id } = req.params; // Get the class ID from the URL parameter
 
   try {
+
+    // Validate ObjectIds
+    if (!mongoose.Types.ObjectId.isValid(teacherId) || !mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ success: false, message: 'Invalid teacherId or userId' });
+    }
+
     // Find the scheduled class that matches the user and teacher
     const scheduledClass = await ScheduledClass.findOne<IScheduleClass>({
       _id: id,
