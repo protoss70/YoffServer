@@ -60,17 +60,20 @@ router.post('/', async (req: Request, res: Response) => {
 
 // Delete a Scheduled Class
 router.delete('/:id', async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { userId, teacherId } = req.body; // Destructure userId and teacherId from the request body
+  const { id } = req.params; // Get the class ID from the URL parameter
 
   try {
-    
-    // TODO add here a data validation to match userId and teacherId before deleting
-    // to prevent others from deleting schedules which are not theirs
+    // Find and delete the scheduled class if it exists and matches the user and teacher
+    const deletedClass = await ScheduledClass.findOneAndDelete({
+      _id: id,
+      teacher: teacherId,
+      user: userId,
+    });
 
-    const deletedClass = await ScheduledClass.findByIdAndDelete(id);
-
+    // Check if the class was found and deleted
     if (!deletedClass) {
-      return res.status(404).json({ message: 'Scheduled class not found' });
+      return res.status(404).json({ message: 'Scheduled class not found or does not belong to the user' });
     }
 
     res.status(200).json({
@@ -86,39 +89,4 @@ router.delete('/:id', async (req: Request, res: Response) => {
   }
 });
 
-// Update a Scheduled Class
-router.put('/:id', async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { date, teacher, user, isCompleted } = req.body;
-
-  try {
-    const updatedClass = await ScheduledClass.findByIdAndUpdate(
-      id,
-      {
-        date,
-        teacher,
-        user,
-        isCompleted,
-      },
-      { new: true } // Return the updated document
-    );
-
-    if (!updatedClass) {
-      return res.status(404).json({ message: 'Scheduled class not found' });
-    }
-
-    res.status(200).json({
-      success: true,
-      updatedClass,
-    });
-  } catch (error) {
-    console.error('Error updating scheduled class:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error',
-    });
-  }
-});
-
-// Export the router
 export default router;

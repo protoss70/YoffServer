@@ -42,26 +42,5 @@ export async function isDateAvailable(teacherId: Types.ObjectId, date: IDate): P
       'date.date': getIsoString(date.date), // Check for the actual date
       teacher: teacherId,
     });
-    // TODO not working
-    console.log("bool", scheduledClass === null);
-    console.log('found class', scheduledClass)
     return scheduledClass === null;
-  }
-
-// New function to check if a scheduled class exists for a given teacher ID, date, and user ID
-export async function doesScheduledClassExists(
-    teacherId: Types.ObjectId,
-    userId: Types.ObjectId,
-    date: IDate
-  ): Promise<boolean> {
-    const scheduledClass = await ScheduledClass.findOne({
-      teacher: teacherId,
-      user: userId,
-      'date.day': date.day,
-      'date.hour': date.hour,
-      'date.date': date.date,
-    });
-  
-    // If a scheduled class is found, return true (exists)
-    return scheduledClass !== null;
   }
