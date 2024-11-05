@@ -1,0 +1,1 @@
+export type Days = "Monday" | "Tuesday" | "Thursday" | "Wednesday" | "Friday" | "Saturday" | "Sunday";

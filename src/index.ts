@@ -2,9 +2,9 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import cors from "cors"; // Import cors middleware
 import userRoutes from './routes/userRoutes';
-import scheduledClassRoutes from './routes/scheduleClassRoute';
+import scheduledClassRoutes from './routes/scheduleClassRoutes';
 import paymentRoutes from './routes/paymentRoutes';
-import teacherRoutes from './routes/teacherRoute';
+import teacherRoutes from './routes/teacherRoutes';
 import { isAuth } from './middleware/isAuth';
 import { checkUserMatch } from './middleware/checkUserMatch';
 import connectDB from './database/db'; // Import your connectDB function
@@ -35,7 +35,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/api/users', isAuth, userRoutes);
 
 // Use scheduled class routes
-app.use('/api/scheduledClasses', isAuth, checkUserMatch, scheduledClassRoutes);
+app.use('/api/scheduleClasses', isAuth, checkUserMatch, scheduledClassRoutes);
 
 // Use payment routes
 app.use('/api/payments', isAuth, checkUserMatch, paymentRoutes);
