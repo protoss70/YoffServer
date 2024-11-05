@@ -12,6 +12,7 @@ export interface IScheduleClass extends Document {
   teacher: Types.ObjectId; // Reference to a teacher's ObjectId
   user: Types.ObjectId;    // Reference to a user's ObjectId
   isCompleted: boolean;
+  isDemoClass?: boolean;
 }
 
 // Create the ScheduledClass schema
@@ -44,6 +45,11 @@ const ScheduleClassSchema: Schema = new Schema({
     required: true,
     default: false,
   },
+  isDemoClass: {
+    type: Boolean,
+    required: false,
+    default: false
+  }
 });
 
 // Create the ScheduledClass model

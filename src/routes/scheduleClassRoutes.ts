@@ -2,12 +2,16 @@ import express, { Request, Response } from 'express';
 import ScheduledClass, { IScheduleClass } from '../models/ScheduleClass'; // Adjust the import path
 import Teacher from '../models/Teacher';
 import { isValidDate, isDateAvailable } from '../utility/scheduleUtils';
+import User from '../models/User';
 
 const router = express.Router();
 
 // Create a Scheduled Class
 router.post('/', async (req: Request, res: Response) => {
   const { date, teacherId, userId } = req.body;
+  const isDemoClass =  req.query.isDemoClass === "true";
+  const userData = res.locals.userData;
+
   try {
     // Fetch teacher data using the teacherId
     const teacherData = await Teacher.findById(teacherId);
@@ -37,11 +41,26 @@ router.post('/', async (req: Request, res: Response) => {
       });
     }
 
+    if (isDemoClass && userData.demoClass){
+      return res.status(400).json({
+        success: false,
+        message: 'The user already used their demo class',
+      }); 
+    }
+
+    // If this is a demo class, update the user's demoClass field to the current date
+    if (isDemoClass) {
+      await User.findByIdAndUpdate(userId, {
+        demoClass: new Date(), // Set demoClass to current date
+      });
+    }
+
     // Create the scheduled class if all validations pass
     const newClass: IScheduleClass = await ScheduledClass.create({
       date,
       teacher: teacherId, // Ensure to use 'teacher' here
       user: userId, // Ensure to use 'user' here
+      isDemoClass: isDemoClass || false
     });
 
 
@@ -64,17 +83,27 @@ router.delete('/:id', async (req: Request, res: Response) => {
   const { id } = req.params; // Get the class ID from the URL parameter
 
   try {
-    // Find and delete the scheduled class if it exists and matches the user and teacher
-    const deletedClass = await ScheduledClass.findOneAndDelete({
+    // Find the scheduled class that matches the user and teacher
+    const scheduledClass = await ScheduledClass.findOne<IScheduleClass>({
       _id: id,
       teacher: teacherId,
       user: userId,
     });
 
-    // Check if the class was found and deleted
-    if (!deletedClass) {
+    // Check if the class was found
+    if (!scheduledClass) {
       return res.status(404).json({ message: 'Scheduled class not found or does not belong to the user' });
     }
+
+    // If the class is a demo class, remove the demoClass date from the user
+    if (scheduledClass.isDemoClass) {
+      await User.findByIdAndUpdate(userId, {
+        $unset: { demoClass: "" }, // Unset the demoClass field
+      });
+    }
+
+    // Delete the scheduled class
+    await ScheduledClass.findByIdAndDelete(id);
 
     res.status(200).json({
       success: true,
