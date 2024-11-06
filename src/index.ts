@@ -8,6 +8,7 @@ import teacherRoutes from './routes/teacherRoutes';
 import { isAuth } from './middleware/isAuth';
 import { checkUserMatch } from './middleware/checkUserMatch';
 import connectDB from './database/db'; // Import your connectDB function
+import isAdmin from './middleware/isAdmin';
 
 dotenv.config();
 
@@ -38,7 +39,7 @@ app.use('/api/users', isAuth, userRoutes);
 app.use('/api/scheduleClasses', isAuth, checkUserMatch, scheduledClassRoutes);
 
 // Use payment routes
-app.use('/api/payments', isAuth, checkUserMatch, paymentRoutes);
+app.use('/api/payments', isAdmin, paymentRoutes);
 
 // Teacher routes without auth
 app.use('/api/teachers', teacherRoutes);

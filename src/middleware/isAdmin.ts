@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 
 require('dotenv').config();
 
-function checkAdminCredentials(req: Request, res: Response, next: NextFunction) {
+function isAdmin(req: Request, res: Response, next: NextFunction) {
   const adminUsername = req.headers['x-admin-username'];
   const adminPassword = req.headers['x-admin-password'];
 
@@ -18,4 +18,4 @@ function checkAdminCredentials(req: Request, res: Response, next: NextFunction) 
   res.status(401).json({ message: "Unauthorized: Invalid admin credentials" });
 }
 
-module.exports = checkAdminCredentials;
+export default isAdmin;

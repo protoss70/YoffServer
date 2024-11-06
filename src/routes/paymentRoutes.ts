@@ -3,10 +3,11 @@ import Payment, { IPayment } from '../models/Payment'; // Adjust the import path
 
 const router = express.Router();
 
+// TODO after creating a payment system, add strict validation
+
 // Create a Payment
 router.post('/', async (req: Request, res: Response) => {
-  const { amount } = req.body; // Extract the amount from the request body
-  const user = res.locals.user; // Get the authenticated user from the middleware
+  const { amount, userId } = req.body; // Extract the amount from the request body
 
   // Validate amount
   if (typeof amount !== 'number' || amount <= 0) {
@@ -19,10 +20,10 @@ router.post('/', async (req: Request, res: Response) => {
   try {
     // Create a new payment record using the user's MongoDB _id
     const payment: IPayment = await Payment.create({
-      user: user._id, // Use the user's MongoDB ObjectId
+      user: userId, // Use the user's MongoDB ObjectId
       amount,
       paymentDate: new Date(), // Automatically set the current date
-      // isPaid will default to false
+      isPaid: true
     });
 
     // Respond with the created payment
