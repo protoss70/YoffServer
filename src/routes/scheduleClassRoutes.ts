@@ -184,6 +184,7 @@ router.get('/:userId', async (req: Request, res: Response) => {
           date: 1, // Include the full date object
           language: 1,
           isDemoClass: 1,
+          'teacherDetails._id': 1,
           'teacherDetails.name': 1, // Include teacher's name
           'teacherDetails.surname': 1, // Include teacher's surname
         },
