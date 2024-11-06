@@ -27,7 +27,11 @@ const mongoose_1 = __importStar(require("mongoose"));
 // Create the ScheduledClass schema
 const ScheduleClassSchema = new mongoose_1.Schema({
     date: {
-        type: Date,
+        type: {
+            day: { type: String, required: true },
+            hour: { type: String, required: true },
+            date: Date
+        },
         required: true,
     },
     scheduledAt: {
@@ -50,6 +54,15 @@ const ScheduleClassSchema = new mongoose_1.Schema({
         required: true,
         default: false,
     },
+    language: {
+        type: String,
+        required: true
+    },
+    isDemoClass: {
+        type: Boolean,
+        required: false,
+        default: false
+    }
 });
 // Create the ScheduledClass model
 const ScheduledClass = mongoose_1.default.model('ScheduledClass', ScheduleClassSchema);

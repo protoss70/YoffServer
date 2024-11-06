@@ -7,6 +7,7 @@ exports.isAuth = void 0;
 const firebaseConfig_1 = __importDefault(require("../firebaseConfig")); // Import Firebase Admin SDK
 // Middleware to check Firebase ID token
 const isAuth = async (req, res, next) => {
+    console.log("AUTH CHECK");
     const token = req.headers.authorization?.split(' ')[1]; // Get token from Authorization header (Bearer <token>)
     if (!token) {
         return res.status(401).json({ message: 'Unauthorized' });
