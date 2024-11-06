@@ -18,7 +18,7 @@ dotenv_1.default.config();
 const app = (0, express_1.default)();
 // CORS configuration
 const corsOptions = {
-    origin: ['https://yoff.academy', 'http://localhost:8080'], // Allow these origins
+    origin: ['https://yoff.academy', 'http://localhost:5173'], // Allow these origins
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed HTTP methods
     credentials: true, // Allow credentials
 };
