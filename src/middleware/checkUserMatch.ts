@@ -6,7 +6,7 @@ export const checkUserMatch = async (req: Request, res: Response, next: NextFunc
   console.log("USER MATCH CHECK");
 
   const tokenEmail = res.locals.user?.email; // Get email from decoded token
-  const userId = req.body.userId; // Get userId from req.body.userId
+  const userId = req.body.userId || req.query.userId; // Get userId from req.body or req.query
 
   if (!userId) {
     return res.status(400).json({ message: 'User ID is required' });
