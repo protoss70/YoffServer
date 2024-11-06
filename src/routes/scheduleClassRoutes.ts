@@ -9,7 +9,7 @@ const router = express.Router();
 
 // Create a Scheduled Class
 router.post('/', async (req: Request, res: Response) => {
-  const { date, teacherId, userId } = req.body;
+  const { date, teacherId, userId, language } = req.body;
   const isDemoClass =  req.query.isDemoClass === "true";
   const userData = res.locals.userData;
 
@@ -55,10 +55,22 @@ router.post('/', async (req: Request, res: Response) => {
       }); 
     }
 
+    if (!isDemoClass && userData.credits < 1){
+      return res.status(400).json({
+        success: false,
+        message: 'Insufficent credits',
+      });
+    }
+
     // If this is a demo class, update the user's demoClass field to the current date
     if (isDemoClass) {
       await User.findByIdAndUpdate(userId, {
         demoClass: new Date(), // Set demoClass to current date
+      });
+    }else {
+      // Increment the user's credits by 1 if it's not a demo class
+      await User.findByIdAndUpdate(userId, {
+        $inc: { credits: -1 }, // Increment the credits field by 1
       });
     }
 
@@ -67,7 +79,8 @@ router.post('/', async (req: Request, res: Response) => {
       date,
       teacher: teacherId, // Ensure to use 'teacher' here
       user: userId, // Ensure to use 'user' here
-      isDemoClass: isDemoClass || false
+      isDemoClass: isDemoClass || false,
+      language: language,
     });
 
 
@@ -113,6 +126,11 @@ router.delete('/:id', async (req: Request, res: Response) => {
       await User.findByIdAndUpdate(userId, {
         $unset: { demoClass: "" }, // Unset the demoClass field
       });
+    }else {
+      // Increment the user's credits by 1 if it's not a demo class
+      await User.findByIdAndUpdate(userId, {
+        $inc: { credits: 1 }, // Increment the credits field by 1
+      });
     }
 
     // Delete the scheduled class
@@ -132,3 +150,59 @@ router.delete('/:id', async (req: Request, res: Response) => {
 });
 
 export default router;
+
+
+// Get all Scheduled Classes for a specific user
+router.get('/:userId', async (req: Request, res: Response) => {
+  const { userId } = req.params; // Get the userId from the URL parameter
+
+  try {
+    // Validate userId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ success: false, message: 'Invalid userId' });
+    }
+
+    // Aggregate scheduled classes for the given userId
+    const scheduledClasses = await ScheduledClass.aggregate([
+      {
+        $match: { user: new mongoose.Types.ObjectId(userId) }, // Match classes that belong to the user
+      },
+      {
+        $lookup: {
+          from: 'teachers', // Name of the collection to join
+          localField: 'teacher', // Field from the current collection
+          foreignField: '_id', // Field from the teachers collection
+          as: 'teacherDetails', // Alias for the joined data
+        },
+      },
+      {
+        $unwind: '$teacherDetails', // Flatten the teacherDetails array
+      },
+      {
+        $project: {
+          _id: 1,
+          date: 1, // Include the full date object
+          language: 1,
+          isDemoClass: 1,
+          'teacherDetails.name': 1, // Include teacher's name
+          'teacherDetails.surname': 1, // Include teacher's surname
+        },
+      },
+      {
+        $sort: { 'date.date': 1 }, // Sort by the date field inside the `date` object in ascending order
+      },
+    ]);
+
+    // Return the result
+    res.status(200).json({
+      success: true,
+      scheduledClasses,
+    });
+  } catch (error) {
+    console.error('Error fetching scheduled classes:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    });
+  }
+});

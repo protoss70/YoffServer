@@ -45,6 +45,10 @@ const ScheduleClassSchema: Schema = new Schema({
     required: true,
     default: false,
   },
+  language: {
+    type: String,
+    required: true
+  },
   isDemoClass: {
     type: Boolean,
     required: false,
