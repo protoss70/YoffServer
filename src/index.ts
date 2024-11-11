@@ -5,6 +5,7 @@ import userRoutes from './routes/userRoutes';
 import scheduledClassRoutes from './routes/scheduleClassRoutes';
 import paymentRoutes from './routes/paymentRoutes';
 import teacherRoutes from './routes/teacherRoutes';
+import testRoutes from "./routes/testRoutes";
 import { isAuth } from './middleware/isAuth';
 import { checkUserMatch } from './middleware/checkUserMatch';
 import connectDB from './database/db'; // Import your connectDB function
@@ -56,6 +57,11 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error('Stack trace:', err.stack); // Log stack trace
   res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
 });
+
+if (process.env.ENVIRONMENT === "DEVELOPMENT"){
+  // Teacher routes without auth
+app.use('/api/test', testRoutes);
+}
 
 // Connect to the database and then start the server
 const PORT = process.env.PORT || 3000;

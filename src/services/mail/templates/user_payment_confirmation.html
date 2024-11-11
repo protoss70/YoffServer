@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Confirmation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .email-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .email-header {
+      background-color: #B671FF; /* Main color */
+      padding: 20px;
+      color: white;
+      text-align: center;
+    }
+    .email-body {
+      background-color: #f4f4f4 !important;
+      padding: 20px;
+      color: #222222; /* Dark color */
+    }
+    .email-footer {
+      background-color: #353535; /* Footer color */
+      padding: 10px;
+      color: white;
+      text-align: center;
+    }
+    .button {
+      background-color: #4CAF50; /* Green color */
+      color: white !important;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+      display: inline-block;
+      text-decoration: none;
+    }
+    .amount {
+      color: #4CAF50;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .classes {
+      color: #4CAF50;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="email-header">
+      <h1>Yoff Academy</h1>
+      <p>Payment Confirmation</p>
+    </div>
+
+    <div class="email-body">
+      <h2>Dear {{studentFullname}},</h2>
+      <p>Thank you for your payment! We are happy to inform you that we have successfully received your payment of <span class="amount">{{paymentAmount}}</span>.</p>
+      <p>As part of your purchase, you can now schedule <span class="classes">{{numberOfClasses}}</span> classes with us.</p>
+      <p>We appreciate your trust in Yoff Academy and are excited to have you on board. You can now proceed to schedule your classes at your convenience.</p>
+      <p>Should you have any questions, feel free to reach out to us at <a href="mailto:info@yoff.academy" style="color: #B671FF !important; text-decoration: none !important; font-weight: bold;">info@yoff.academy</a>.</p>
+      
+      <a href="https://yoff.academy" class="button">Schedule Your Class</a>
+    </div>
+
+    <div class="email-footer">
+      <p>&copy; 2024 Yoff Academy. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
