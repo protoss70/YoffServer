@@ -5,14 +5,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const User_1 = __importDefault(require("../models/User")); // Adjust the import path as needed
+const dates_1 = require("../utility/dates");
 const router = express_1.default.Router();
 // Find or Create User Route
 router.post('/findOrCreate', async (req, res) => {
     const email = res.locals.user?.email;
     const emailVerified = res.locals.user?.email_verified;
+    const { timezone } = req.body; // Extract timezone from request body
     if (!email) {
         console.error('No email found in res.locals.user');
         return res.status(400).json({ success: false, message: 'Email not found in request' });
+    }
+    if (!timezone) {
+        console.error('No timezone found in request body');
+        return res.status(400).json({ success: false, message: 'Timezone is required' });
+    }
+    // Check if timezone is valid
+    if (!(0, dates_1.isValidGMTOffset)(timezone)) {
+        console.error('Invalid timezone:', timezone);
+        return res.status(400).json({ success: false, message: 'Invalid timezone provided' });
     }
     try {
         // Check if the user exists
@@ -24,8 +35,15 @@ router.post('/findOrCreate', async (req, res) => {
                 credits: 0,
                 emailVerified: emailVerified || false,
                 demoClass: undefined, // Assuming demoClass can be undefined
+                timezone, // Add timezone to the new user document
             });
             console.log('Newly created user:', user);
+        }
+        else if (!user.timezone) {
+            // If user exists, update the timezone if it's not set
+            user.timezone = timezone;
+            await user.save();
+            console.log('User timezone updated:', user);
         }
         // Respond with the user data
         res.status(200).json({

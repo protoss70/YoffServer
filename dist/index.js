@@ -10,6 +10,7 @@ const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const scheduleClassRoutes_1 = __importDefault(require("./routes/scheduleClassRoutes"));
 const paymentRoutes_1 = __importDefault(require("./routes/paymentRoutes"));
 const teacherRoutes_1 = __importDefault(require("./routes/teacherRoutes"));
+const testRoutes_1 = __importDefault(require("./routes/testRoutes"));
 const isAuth_1 = require("./middleware/isAuth");
 const checkUserMatch_1 = require("./middleware/checkUserMatch");
 const db_1 = __importDefault(require("./database/db")); // Import your connectDB function
@@ -49,6 +50,10 @@ app.use((err, req, res, next) => {
     console.error('Stack trace:', err.stack); // Log stack trace
     res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
 });
+if (process.env.ENVIRONMENT === "DEVELOPMENT") {
+    // Teacher routes without auth
+    app.use('/api/test', testRoutes_1.default);
+}
 // Connect to the database and then start the server
 const PORT = process.env.PORT || 3000;
 console.log('Attempting database connection');

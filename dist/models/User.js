@@ -47,6 +47,10 @@ const UserSchema = new mongoose_1.Schema({
         type: Date,
         required: false, // Optional: can be undefined
     },
+    timezone: {
+        type: String,
+        required: true,
+    }
 });
 // Create the User model
 const User = mongoose_1.default.model('User', UserSchema);

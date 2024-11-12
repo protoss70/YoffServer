@@ -76,6 +76,11 @@ const TeacherSchema = new mongoose_1.Schema({
         required: false,
         default: [],
     },
+    time_zone: {
+        type: String,
+        required: false,
+        default: "GMT+3"
+    }
 });
 // Create the Teacher model
 const Teacher = mongoose_1.default.model('Teacher', TeacherSchema);

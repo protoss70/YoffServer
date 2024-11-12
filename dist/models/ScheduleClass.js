@@ -27,11 +27,7 @@ const mongoose_1 = __importStar(require("mongoose"));
 // Create the ScheduledClass schema
 const ScheduleClassSchema = new mongoose_1.Schema({
     date: {
-        type: {
-            day: { type: String, required: true },
-            hour: { type: String, required: true },
-            date: Date
-        },
+        type: String,
         required: true,
     },
     scheduledAt: {

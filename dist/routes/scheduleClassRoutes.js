@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const ScheduleClass_1 = __importDefault(require("../models/ScheduleClass")); // Adjust the import path
 const Teacher_1 = __importDefault(require("../models/Teacher"));
 const scheduleUtils_1 = require("../utility/scheduleUtils");
+const dates_1 = require("../utility/dates");
 const User_1 = __importDefault(require("../models/User"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const router = express_1.default.Router();
@@ -16,6 +17,11 @@ router.post('/', async (req, res) => {
     const isDemoClass = req.query.isDemoClass === "true";
     const userData = res.locals.userData;
     try {
+        // Check if valid date string
+        if (!(0, dates_1.isValidDate)(date)) {
+            return res.status(400).json({ success: false, message: 'Invalid date' });
+        }
+        const _date = (0, dates_1.processRequestDate)(date);
         // Validate ObjectIds
         if (!mongoose_1.default.Types.ObjectId.isValid(teacherId) || !mongoose_1.default.Types.ObjectId.isValid(userId)) {
             return res.status(400).json({ success: false, message: 'Invalid teacherId or userId' });
@@ -29,11 +35,16 @@ router.post('/', async (req, res) => {
                 message: 'Teacher not found',
             });
         }
-        // Check if the given date exists in the teacher schedule
-        if (!(0, scheduleUtils_1.isValidDate)(teacherData, date)) {
+        if (!(0, scheduleUtils_1.isDateInTeacherSchedule)(teacherData, _date.toString())) {
             return res.status(400).json({
                 success: false,
                 message: 'The given date does not exist on the teacher schedule',
+            });
+        }
+        if (!(0, scheduleUtils_1.isLanguageTaughtByTeacher)(teacherData, language)) {
+            return res.status(400).json({
+                success: false,
+                message: 'The language provided is not taught by the teacher',
             });
         }
         // Check if the given date is available
@@ -70,7 +81,7 @@ router.post('/', async (req, res) => {
         }
         // Create the scheduled class if all validations pass
         const newClass = await ScheduleClass_1.default.create({
-            date,
+            date: _date.toISOString(),
             teacher: teacherId, // Ensure to use 'teacher' here
             user: userId, // Ensure to use 'user' here
             isDemoClass: isDemoClass || false,
