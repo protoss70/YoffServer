@@ -1,7 +1,8 @@
 import express, { Request, Response } from 'express';
 import ScheduledClass, { IScheduleClass } from '../models/ScheduleClass'; // Adjust the import path
 import Teacher from '../models/Teacher';
-import { isValidDate, isDateAvailable } from '../utility/scheduleUtils';
+import { isDateAvailable, isDateInTeacherSchedule, isLanguageTaughtByTeacher } from '../utility/scheduleUtils';
+import { processRequestDate, isValidDate } from '../utility/dates';
 import User from '../models/User';
 import mongoose from 'mongoose';
 
@@ -14,6 +15,12 @@ router.post('/', async (req: Request, res: Response) => {
   const userData = res.locals.userData;
 
   try {
+
+    // Check if valid date string
+    if (!isValidDate(date)){
+      return res.status(400).json({ success: false, message: 'Invalid date' });
+    }
+    const _date = processRequestDate(date); 
 
     // Validate ObjectIds
     if (!mongoose.Types.ObjectId.isValid(teacherId) || !mongoose.Types.ObjectId.isValid(userId)) {
@@ -30,12 +37,17 @@ router.post('/', async (req: Request, res: Response) => {
         message: 'Teacher not found',
       });
     }
-
-    // Check if the given date exists in the teacher schedule
-    if (!isValidDate(teacherData, date)) {
+    if (!isDateInTeacherSchedule(teacherData, _date.toString())){
       return res.status(400).json({
         success: false,
         message: 'The given date does not exist on the teacher schedule',
+      });
+    }
+
+    if (!isLanguageTaughtByTeacher(teacherData, language)){
+      return res.status(400).json({
+        success: false,
+        message: 'The language provided is not taught by the teacher',
       });
     }
 
@@ -76,7 +88,7 @@ router.post('/', async (req: Request, res: Response) => {
 
     // Create the scheduled class if all validations pass
     const newClass: IScheduleClass = await ScheduledClass.create({
-      date,
+      date: _date.toISOString(),
       teacher: teacherId, // Ensure to use 'teacher' here
       user: userId, // Ensure to use 'user' here
       isDemoClass: isDemoClass || false,

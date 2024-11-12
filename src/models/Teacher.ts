@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { GMTOffset } from '../utility/types';
 
 // Define the structure for the schedule
 interface ISchedule {
@@ -17,6 +18,7 @@ export interface ITeacher extends Document {
   education: string;
   languages: string[];
   schedule: ISchedule[];
+  time_zone: GMTOffset;
 }
 
 // Create the Teacher schema
@@ -71,6 +73,11 @@ const TeacherSchema: Schema = new Schema({
     required: false,
     default: [],
   },
+  time_zone: {
+    type: String,
+    required: false,
+    default: "GMT+3"
+  }
 });
 
 // Create the Teacher model

@@ -2,45 +2,67 @@ import { ITeacher } from '../models/Teacher'; // Update the path accordingly
 import ScheduledClass from '../models/ScheduleClass';
 import { Types } from 'mongoose'; 
 import { getDay, getIsoString } from './dates';
+import { getNext3WeeksDates } from './dates';
 
-// Define the interface for the date object
-interface IDate {
-  day: string;
-  hour: string;
-  date: string; // dd/mm/yyyy
-}
+export function isDateInTeacherSchedule(teacher: ITeacher, date: string): boolean {
+  // Convert the provided date to GMT+0 (UTC) and remove seconds and milliseconds
+  const dateGMT0 = new Date(date);
+  dateGMT0.setSeconds(0, 0);
 
-// Function to check if a teacher is available on a given day and hour
-export function isValidDate(teacher: ITeacher, date: IDate): boolean {
-  // Get the day of the week from the date object
-  const dayOfWeek = getDay(new Date(date.date));
+  // Extract the day, month, year, hour, and minute of the given date
+  const targetDay = dateGMT0.getUTCDate();
+  const targetMonth = dateGMT0.getUTCMonth();
+  const targetYear = dateGMT0.getUTCFullYear();
+  const targetHour = dateGMT0.getUTCHours();
+  const targetMinute = dateGMT0.getUTCMinutes();
 
-  // Check if the day matches
-  if (dayOfWeek !== date.day) {
-    return false; // The day does not match the actual date
-  }
+  // Loop through the teacher's schedule and check if the date exists
+  const teacherScheduleDates = getNext3WeeksDates(teacher.schedule, teacher.time_zone);
+  console.log("teacher schedule", teacherScheduleDates);
 
-  // Loop through the teacher's schedule to find a matching day and hour
-  for (const schedule of teacher.schedule) {
-    if (schedule.day === date.day && schedule.hours.includes(date.hour)) {
-      return true; // Valid date and hour found
+  for (const scheduleDateString of teacherScheduleDates) {
+    // Convert each schedule date to a Date object and ensure it's in GMT+0
+    const scheduleDate = new Date(scheduleDateString);
+    scheduleDate.setSeconds(0, 0); // Remove seconds and milliseconds
+
+    // Extract the day, month, year, hour, and minute of the schedule date
+    const scheduleDay = scheduleDate.getUTCDate();
+    const scheduleMonth = scheduleDate.getUTCMonth();
+    const scheduleYear = scheduleDate.getUTCFullYear();
+    const scheduleHour = scheduleDate.getUTCHours();
+    const scheduleMinute = scheduleDate.getUTCMinutes();
+
+    // Check if the target date matches the schedule date (ignoring seconds and smaller units)
+    if (
+      targetDay === scheduleDay &&
+      targetMonth === scheduleMonth &&
+      targetYear === scheduleYear &&
+      targetHour === scheduleHour &&
+      targetMinute === scheduleMinute
+    ) {
+      return true; // Found a match
     }
   }
 
-  // If no match is found, return false
-  return false;
+  return false; // No match found
 }
 
-// Function to check if a given date is available for a teacher
-export async function isDateAvailable(teacherId: Types.ObjectId, date: IDate): Promise<boolean> {
-    // Check if there is a scheduled class for the given teacher on the specified day and hour
-    console.log("is available content", teacherId, date);
+// Function to check if a given ISO string date is available for a teacher
+export async function isDateAvailable(teacherId: Types.ObjectId, isoDate: string): Promise<boolean> {
+  console.log("is available content", teacherId, isoDate);
 
-    const scheduledClass = await ScheduledClass.findOne({
-      'date.day': date.day,
-      'date.hour': date.hour,
-      'date.date': getIsoString(date.date), // Check for the actual date
-      teacher: teacherId,
-    });
-    return scheduledClass === null;
-  }
+  // Check if there is a scheduled class for the given teacher on the exact date
+  const scheduledClass = await ScheduledClass.findOne({
+    date: isoDate, // Directly compare the ISO string date
+    teacher: teacherId,
+  });
+
+  // If scheduledClass is null, the date is available
+  return scheduledClass === null;
+}
+
+
+// Utility function to check if a teacher teaches a specific language
+export function isLanguageTaughtByTeacher(teacher: ITeacher, language: string): boolean {
+  return teacher.languages.includes(language);
+}

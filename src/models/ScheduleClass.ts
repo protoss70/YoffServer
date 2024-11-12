@@ -3,11 +3,7 @@ import { Days } from '../utility/types';
 
 // Define the ScheduledClass interface
 export interface IScheduleClass extends Document {
-  date: {
-    day: Days, 
-    hour: string,
-    date: string
-  }; 
+  date: string;
   scheduledAt: Date;
   teacher: Types.ObjectId; // Reference to a teacher's ObjectId
   user: Types.ObjectId;    // Reference to a user's ObjectId
@@ -18,11 +14,7 @@ export interface IScheduleClass extends Document {
 // Create the ScheduledClass schema
 const ScheduleClassSchema: Schema = new Schema({
   date: {
-    type: {
-        day: { type: String, required: true },
-        hour: { type: String, required: true },
-        date: Date
-      },
+    type: String,
     required: true,
   },
   scheduledAt: {
