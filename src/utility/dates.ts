@@ -65,3 +65,11 @@ export function getNext3WeeksDates(
     // Return the Date object in GMT+0 (UTC) with time truncated to the minute
     return gmt0Date;
   }
+
+  export const isValidGMTOffset = (timezone: string): timezone is GMTOffset => {
+    const validOffsets: GMTOffset[] = [
+      "GMT+0", "GMT+1", "GMT+2", "GMT+3", "GMT+4", "GMT+5", "GMT+6", "GMT+7",
+      "GMT+8", "GMT+9", "GMT+10", "GMT+11", "GMT+12", "GMT+13", "GMT+14"
+    ];
+    return validOffsets.includes(timezone as GMTOffset);
+  };

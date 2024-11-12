@@ -1,5 +1,6 @@
 import express from "express";
 import { confirmPaymentReceived, confirmClassCancellationToStudent, confirmClassCancellationToTeacher, confirmClassToTeacher, confirmClassToUser, sendMessageToTeacher, notifyPaymentAwaitingConfirmation } from "../services/mail/emailTemplates"; // Adjust the import based on your actual file structure
+import { GMTOffset } from "../utility/types";
 
 const router = express.Router();
 
@@ -10,15 +11,17 @@ router.get("/send-confirmation", async (req, res) => {
     const params = {
       email: "gokdenizk.be@gmail.com",
       studentFullName: "Deniz Harman Kurum",
+      studentFullname: "Deniz Harman Kurum",
       studentEmail: "harmank@gmail.com",
       name: "Gokdeniz",
       language: "English",
       teacherFullname: "Robb Stark",
       teacherName: "Robb Stark",
-      date: new Date("2024-11-18T15:30:00.000Z"),
+      date: new Date("2024-11-18T23:30:00.000Z").toISOString(),
       studentMessage: "I have a couple of questions regarding the language lessons. Could you clarify if the class will cover specific dialects or regional variations of the language? Also, will there be a focus on conversational skills or more on grammar?",
       paymentAmount: "400czk",
-      numberOfClasses: 4
+      numberOfClasses: 4,
+      timezone: "GMT-3" as GMTOffset
     };
 
     // Call the function to send the email

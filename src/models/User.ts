@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { GMTOffset } from '../utility/types';
 
 // Define the User interface
 export interface IUser extends Document {
@@ -6,6 +7,7 @@ export interface IUser extends Document {
   credits: number;
   emailVerified: boolean;
   demoClass?: Date; // Optional field
+  timezone: GMTOffset;
 }
 
 // Create the User schema
@@ -31,6 +33,10 @@ const UserSchema: Schema = new Schema({
     type: Date,
     required: false, // Optional: can be undefined
   },
+  timezone: {
+    type: String,
+    required: true,
+  }
 });
 
 // Create the User model
