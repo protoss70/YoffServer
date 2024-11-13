@@ -23,7 +23,6 @@ export function getNext3WeeksDates(
   ): string[] {
     const result: string[] = [];
     const timezoneOffset = parseInt(timezone.slice(4), 10); // Extract offset in hours from "GMT+X"
-    console.log("teacher zone", timezone);
   
     schedule.forEach((entry) => {
       const targetDayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(entry.day);

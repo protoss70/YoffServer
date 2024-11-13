@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
 import Teacher, { ITeacher } from '../models/Teacher';
+import { GMTOffset } from '../utility/types';
+import { getNext3WeeksDates } from '../utility/dates';
 
 const router = express.Router();
 
@@ -8,8 +10,20 @@ router.get('/cards', async (req: Request, res: Response) => {
   try {
     const count = parseInt(req.query.count as string, 10) || 1;
 
-    // Get random teachers based on the specified count
-    const teachers: ITeacher[] = await Teacher.aggregate([{ $sample: { size: count } }]);
+    // Get random teachers based on the specified count and project only the needed fields
+    const teachers = await Teacher.aggregate([
+      { $sample: { size: count } },
+      {
+        $project: {
+          name: 1,
+          surname: 1,
+          _id: 1,
+          origin: 1,
+          hobbies: 1,
+          languages: 1,
+        },
+      },
+    ]);
 
     res.json(teachers);
   } catch (error) {
@@ -23,16 +37,25 @@ router.get('/cards', async (req: Request, res: Response) => {
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    
+
     // Find the teacher by ID
     const teacher: ITeacher | null = await Teacher.findById(id);
-    
+
     if (!teacher) {
       return res.status(404).json({ message: 'Teacher not found' });
     }
-    
-    // Send the teacher data as a response
-    res.json(teacher);
+
+    // Get the next 3 weeks of available dates
+    const scheduleDates = getNext3WeeksDates(teacher.schedule, teacher.time_zone);
+
+    // Include scheduleDates in the response
+    const teacherWithSchedule = {
+      ...teacher.toObject(),
+      scheduleDates,
+    };
+
+    // Send the teacher data along with scheduleDates as a response
+    res.json(teacherWithSchedule);
   } catch (error) {
     console.error('Error fetching teacher:', error);
     res.status(500).json({ message: 'Internal server error' });

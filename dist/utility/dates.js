@@ -23,7 +23,6 @@ function isValidDate(dateString) {
 function getNext3WeeksDates(schedule, timezone) {
     const result = [];
     const timezoneOffset = parseInt(timezone.slice(4), 10); // Extract offset in hours from "GMT+X"
-    console.log("teacher zone", timezone);
     schedule.forEach((entry) => {
         const targetDayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(entry.day);
         const currentDate = new Date();
