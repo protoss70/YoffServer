@@ -1,4 +1,6 @@
+import ScheduledClass from "../models/ScheduleClass";
 import { GMTOffset } from "./types";
+import { Types } from "mongoose";
 
 // Function to get the day of the week from a Date object
 export function getDay(date: Date): string {
@@ -15,6 +17,34 @@ export function getIsoString(date: string): string {
 export function isValidDate(dateString: string): boolean {
     return !isNaN(Date.parse(dateString));
   }
+
+// Function to get all the classes that are scheduled within the next 3 weeks for a specific teacher
+export async function getNext3WeeksOccupiedClasses(teacherId: Types.ObjectId): Promise<any[]> {
+  // Get the current UTC date and time
+  const today = new Date();
+  
+  // Get the date 3 weeks later in UTC
+  const threeWeeksLater = new Date(today);
+  threeWeeksLater.setDate(today.getUTCDate() + 21); // Set the date 3 weeks later
+  
+  // Set the time portion to the start of the day (00:00:00 UTC) for accurate comparison
+  today.setUTCHours(0, 0, 0, 0);
+  threeWeeksLater.setUTCHours(23, 59, 59, 999); // Set time to end of the day (23:59:59 UTC)
+  
+  // Fetch scheduled classes for the teacher within the next 3 weeks based on the `date` field
+  const occupiedClasses = await ScheduledClass.find(
+    {
+      teacher: teacherId,
+      date: {
+        $gte: today,
+        $lte: threeWeeksLater,
+      },
+    },
+    { date: 1, _id: 0 } // Project only the `date` field
+  );
+
+  return occupiedClasses; // Return the array of occupied classes within the next 3 weeks
+}
 
 // Function to get all dates for the schedule over the next 3 weeks
 export function getNext3WeeksDates(

@@ -1,5 +1,4 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
-import { Days } from '../utility/types';
 
 // Define the ScheduledClass interface
 export interface IScheduleClass extends Document {
@@ -14,7 +13,7 @@ export interface IScheduleClass extends Document {
 // Create the ScheduledClass schema
 const ScheduleClassSchema: Schema = new Schema({
   date: {
-    type: String,
+    type: Date,
     required: true,
   },
   scheduledAt: {

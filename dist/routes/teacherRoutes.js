@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const Teacher_1 = __importDefault(require("../models/Teacher"));
 const dates_1 = require("../utility/dates");
+const mongoose_1 = require("mongoose");
 const router = express_1.default.Router();
 // GET /teacher/cards - Get random teacher cards
 router.get('/cards', async (req, res) => {
@@ -43,10 +44,13 @@ router.get('/:id', async (req, res) => {
         }
         // Get the next 3 weeks of available dates
         const scheduleDates = (0, dates_1.getNext3WeeksDates)(teacher.schedule, teacher.time_zone);
+        // Get the next 3 weeks of occupied class dates for the teacher
+        const occupiedClassDates = await (0, dates_1.getNext3WeeksOccupiedClasses)(new mongoose_1.Types.ObjectId(id));
         // Include scheduleDates in the response
         const teacherWithSchedule = {
             ...teacher.toObject(),
             scheduleDates,
+            occupiedClassDates
         };
         // Send the teacher data along with scheduleDates as a response
         res.json(teacherWithSchedule);

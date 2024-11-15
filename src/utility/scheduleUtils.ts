@@ -51,9 +51,12 @@ export function isDateInTeacherSchedule(teacher: ITeacher, date: string): boolea
 export async function isDateAvailable(teacherId: Types.ObjectId, isoDate: string): Promise<boolean> {
   console.log("is available content", teacherId, isoDate);
 
+  // Convert isoDate to an ISO string if it isn't already
+  const dateToCheck = new Date(isoDate).toISOString();
+
   // Check if there is a scheduled class for the given teacher on the exact date
   const scheduledClass = await ScheduledClass.findOne({
-    date: isoDate, // Directly compare the ISO string date
+    date: dateToCheck, // Directly compare the ISO string date
     teacher: teacherId,
   });
 

@@ -45,9 +45,11 @@ function isDateInTeacherSchedule(teacher, date) {
 // Function to check if a given ISO string date is available for a teacher
 async function isDateAvailable(teacherId, isoDate) {
     console.log("is available content", teacherId, isoDate);
+    // Convert isoDate to an ISO string if it isn't already
+    const dateToCheck = new Date(isoDate).toISOString();
     // Check if there is a scheduled class for the given teacher on the exact date
     const scheduledClass = await ScheduleClass_1.default.findOne({
-        date: isoDate, // Directly compare the ISO string date
+        date: dateToCheck, // Directly compare the ISO string date
         teacher: teacherId,
     });
     // If scheduledClass is null, the date is available

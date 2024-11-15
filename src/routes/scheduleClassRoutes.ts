@@ -54,7 +54,7 @@ router.post('/', async (req: Request, res: Response) => {
     // Check if the given date is available
     const isAvailable = await isDateAvailable(teacherId, date);
     if (!isAvailable){
-      return res.status(400).json({
+      return res.status(409).json({
         success: false,
         message: 'The date is not available',
       });
@@ -68,7 +68,7 @@ router.post('/', async (req: Request, res: Response) => {
     }
 
     if (!isDemoClass && userData.credits < 1){
-      return res.status(400).json({
+      return res.status(402).json({
         success: false,
         message: 'Insufficent credits',
       });

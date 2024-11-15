@@ -1,7 +1,8 @@
 import express, { Request, Response } from 'express';
 import Teacher, { ITeacher } from '../models/Teacher';
 import { GMTOffset } from '../utility/types';
-import { getNext3WeeksDates } from '../utility/dates';
+import { getNext3WeeksDates, getNext3WeeksOccupiedClasses } from '../utility/dates';
+import { Types } from 'mongoose';
 
 const router = express.Router();
 
@@ -48,10 +49,15 @@ router.get('/:id', async (req: Request, res: Response) => {
     // Get the next 3 weeks of available dates
     const scheduleDates = getNext3WeeksDates(teacher.schedule, teacher.time_zone);
 
+    // Get the next 3 weeks of occupied class dates for the teacher
+    const occupiedClassDates = await getNext3WeeksOccupiedClasses(new Types.ObjectId(id));
+
+
     // Include scheduleDates in the response
     const teacherWithSchedule = {
       ...teacher.toObject(),
       scheduleDates,
+      occupiedClassDates
     };
 
     // Send the teacher data along with scheduleDates as a response
