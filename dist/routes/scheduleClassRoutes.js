@@ -119,6 +119,10 @@ router.delete('/:id', async (req, res) => {
         if (!scheduledClass) {
             return res.status(404).json({ message: 'Scheduled class not found or does not belong to the user' });
         }
+        // Check if the class date is in the past
+        if ((0, scheduleUtils_1.isClassInThePast)(scheduledClass.date)) {
+            return res.status(400).json({ message: 'The class has already been completed and cannot be deleted' });
+        }
         // If the class is a demo class, remove the demoClass date from the user
         if (scheduledClass.isDemoClass) {
             await User_1.default.findByIdAndUpdate(userId, {

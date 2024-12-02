@@ -1,5 +1,5 @@
 import express from "express";
-import { confirmPaymentReceived, confirmClassCancellationToStudent, confirmClassCancellationToTeacher, confirmClassToTeacher, confirmClassToUser, sendMessageToTeacher, notifyPaymentAwaitingConfirmation } from "../services/mail/emailTemplates"; // Adjust the import based on your actual file structure
+import { confirmPaymentReceived, confirmClassCancellationToStudent, confirmClassCancellationToTeacher, confirmClassToTeacher, confirmClassToUser, sendMessageToTeacher, paymentAwaitingProcessing } from "../services/mail/emailTemplates"; // Adjust the import based on your actual file structure
 import { GMTOffset } from "../utility/types";
 import { getNext3WeeksOccupiedClasses } from "../utility/dates";
 import mongoose, { Types } from "mongoose";

@@ -50,6 +50,10 @@ const UserSchema = new mongoose_1.Schema({
     timezone: {
         type: String,
         required: true,
+    },
+    fullName: {
+        type: String,
+        required: false,
     }
 });
 // Create the User model

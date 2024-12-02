@@ -14,7 +14,6 @@ const testRoutes_1 = __importDefault(require("./routes/testRoutes"));
 const isAuth_1 = require("./middleware/isAuth");
 const checkUserMatch_1 = require("./middleware/checkUserMatch");
 const db_1 = __importDefault(require("./database/db")); // Import your connectDB function
-const isAdmin_1 = __importDefault(require("./middleware/isAdmin"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 // CORS configuration
@@ -36,7 +35,7 @@ app.use('/api/users', isAuth_1.isAuth, userRoutes_1.default);
 // Use scheduled class routes
 app.use('/api/scheduleClasses', isAuth_1.isAuth, checkUserMatch_1.checkUserMatch, scheduleClassRoutes_1.default);
 // Use payment routes
-app.use('/api/payments', isAdmin_1.default, paymentRoutes_1.default);
+app.use('/api/payments', paymentRoutes_1.default);
 // Teacher routes without auth
 app.use('/api/teachers', teacherRoutes_1.default);
 // Middleware to log incoming requests

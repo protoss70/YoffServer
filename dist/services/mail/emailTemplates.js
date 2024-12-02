@@ -9,7 +9,7 @@ exports.confirmClassCancellationToTeacher = confirmClassCancellationToTeacher;
 exports.confirmClassCancellationToStudent = confirmClassCancellationToStudent;
 exports.sendMessageToTeacher = sendMessageToTeacher;
 exports.confirmPaymentReceived = confirmPaymentReceived;
-exports.notifyPaymentAwaitingConfirmation = notifyPaymentAwaitingConfirmation;
+exports.paymentAwaitingProcessing = paymentAwaitingProcessing;
 const mailer_1 = require("./mailer");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
@@ -189,8 +189,8 @@ async function confirmPaymentReceived(params) {
         console.error('Error sending email:', error);
     }
 }
-async function notifyPaymentAwaitingConfirmation(params) {
-    const { studentFullName, studentEmail } = params;
+async function paymentAwaitingProcessing(params) {
+    const { studentFullName, studentEmail, plan } = params;
     const transport = await (0, mailer_1.createTransport)();
     // Load the HTML template from the file
     const emailTemplatePath = path_1.default.join(__dirname, './templates/payment_process_request.html');
@@ -198,11 +198,12 @@ async function notifyPaymentAwaitingConfirmation(params) {
     // Replace placeholders with actual values
     let htmlContent = emailTemplate
         .replace(/{{userFullName}}/g, studentFullName)
-        .replace(/{{userEmail}}/g, studentEmail);
+        .replace(/{{userEmail}}/g, studentEmail)
+        .replace(/{{plan}}/g, plan);
     const mailOptions = {
         from: '"Yoff Academy" <no-reply@yoff.academy>',
         to: 'gokdenizk.be@gmail.com', // Partner's email address
-        subject: `Payment Awaiting Confirmation for ${studentFullName}`,
+        subject: `Payment Awaiting Processing for ${studentFullName}`,
         html: htmlContent, // Use the dynamically created HTML content
     };
     try {

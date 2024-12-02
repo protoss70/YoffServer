@@ -8,6 +8,7 @@ export interface IUser extends Document {
   emailVerified: boolean;
   demoClass?: Date; // Optional field
   timezone: GMTOffset;
+  fullName?: string; 
 }
 
 // Create the User schema
@@ -36,6 +37,10 @@ const UserSchema: Schema = new Schema({
   timezone: {
     type: String,
     required: true,
+  },
+  fullName: {
+    type: String,
+    required: false,
   }
 });
 

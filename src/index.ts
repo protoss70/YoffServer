@@ -40,7 +40,7 @@ app.use('/api/users', isAuth, userRoutes);
 app.use('/api/scheduleClasses', isAuth, checkUserMatch, scheduledClassRoutes);
 
 // Use payment routes
-app.use('/api/payments', isAdmin, paymentRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Teacher routes without auth
 app.use('/api/teachers', teacherRoutes);

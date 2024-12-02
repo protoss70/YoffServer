@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.isClassInThePast = void 0;
 exports.isDateInTeacherSchedule = isDateInTeacherSchedule;
 exports.isDateAvailable = isDateAvailable;
 exports.isLanguageTaughtByTeacher = isLanguageTaughtByTeacher;
@@ -59,3 +60,8 @@ async function isDateAvailable(teacherId, isoDate) {
 function isLanguageTaughtByTeacher(teacher, language) {
     return teacher.languages.includes(language);
 }
+const isClassInThePast = (date) => {
+    const currentDate = new Date();
+    return new Date(date) < currentDate; // If the class date is before the current date
+};
+exports.isClassInThePast = isClassInThePast;

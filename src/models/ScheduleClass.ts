@@ -2,7 +2,7 @@ import mongoose, { Document, Schema, Types } from 'mongoose';
 
 // Define the ScheduledClass interface
 export interface IScheduleClass extends Document {
-  date: string;
+  date: Date;
   scheduledAt: Date;
   teacher: Types.ObjectId; // Reference to a teacher's ObjectId
   user: Types.ObjectId;    // Reference to a user's ObjectId

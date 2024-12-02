@@ -69,3 +69,8 @@ export async function isDateAvailable(teacherId: Types.ObjectId, isoDate: string
 export function isLanguageTaughtByTeacher(teacher: ITeacher, language: string): boolean {
   return teacher.languages.includes(language);
 }
+
+export const isClassInThePast = (date: Date): boolean => {
+  const currentDate = new Date();
+  return new Date(date) < currentDate;  // If the class date is before the current date
+};

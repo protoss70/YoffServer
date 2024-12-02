@@ -264,8 +264,8 @@ export async function confirmPaymentReceived(params: PaymentConfirmationParams) 
   }
 }
 
-export async function notifyPaymentAwaitingConfirmation(params: { studentFullName: string, studentEmail: string }) {
-  const { studentFullName, studentEmail } = params;
+export async function paymentAwaitingProcessing(params: { studentFullName: string, studentEmail: string, plan: string }) {
+  const { studentFullName, studentEmail, plan } = params;
 
   const transport = await createTransport();
 
@@ -276,12 +276,13 @@ export async function notifyPaymentAwaitingConfirmation(params: { studentFullNam
   // Replace placeholders with actual values
   let htmlContent = emailTemplate
     .replace(/{{userFullName}}/g, studentFullName)
-    .replace(/{{userEmail}}/g, studentEmail);
+    .replace(/{{userEmail}}/g, studentEmail)
+    .replace(/{{plan}}/g, plan);
 
   const mailOptions = {
     from: '"Yoff Academy" <no-reply@yoff.academy>',
     to: 'gokdenizk.be@gmail.com', // Partner's email address
-    subject: `Payment Awaiting Confirmation for ${studentFullName}`,
+    subject: `Payment Awaiting Processing for ${studentFullName}`,
     html: htmlContent, // Use the dynamically created HTML content
   };
 

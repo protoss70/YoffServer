@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import ScheduledClass, { IScheduleClass } from '../models/ScheduleClass'; // Adjust the import path
 import Teacher from '../models/Teacher';
-import { isDateAvailable, isDateInTeacherSchedule, isLanguageTaughtByTeacher } from '../utility/scheduleUtils';
+import { isClassInThePast, isDateAvailable, isDateInTeacherSchedule, isLanguageTaughtByTeacher } from '../utility/scheduleUtils';
 import { processRequestDate, isValidDate } from '../utility/dates';
 import User from '../models/User';
 import mongoose from 'mongoose';
@@ -131,6 +131,11 @@ router.delete('/:id', async (req: Request, res: Response) => {
     // Check if the class was found
     if (!scheduledClass) {
       return res.status(404).json({ message: 'Scheduled class not found or does not belong to the user' });
+    }
+
+    // Check if the class date is in the past
+    if (isClassInThePast(scheduledClass.date)) {
+      return res.status(400).json({ message: 'The class has already been completed and cannot be deleted' });
     }
 
     // If the class is a demo class, remove the demoClass date from the user
