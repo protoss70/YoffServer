@@ -12,20 +12,30 @@ const router = express_1.default.Router();
 router.get('/cards', async (req, res) => {
     try {
         const count = parseInt(req.query.count, 10) || 1;
-        // Get random teachers based on the specified count and project only the needed fields
-        const teachers = await Teacher_1.default.aggregate([
-            { $sample: { size: count } },
-            {
-                $project: {
-                    name: 1,
-                    surname: 1,
-                    _id: 1,
-                    origin: 1,
-                    hobbies: 1,
-                    languages: 1,
+        const random = req.query.random === '1' || false; // Check if random query param is 1 or 0
+        let teachers;
+        if (random) {
+            // If random=1, get random teachers
+            teachers = await Teacher_1.default.aggregate([
+                { $sample: { size: count } },
+                {
+                    $project: {
+                        name: 1,
+                        surname: 1,
+                        _id: 1,
+                        origin: 1,
+                        hobbies: 1,
+                        languages: 1,
+                    },
                 },
-            },
-        ]);
+            ]);
+        }
+        else {
+            // If random=0, return documents in original order
+            teachers = await Teacher_1.default.find({})
+                .limit(count)
+                .select('name surname _id origin hobbies languages');
+        }
         res.json(teachers);
     }
     catch (error) {

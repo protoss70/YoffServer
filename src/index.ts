@@ -5,11 +5,11 @@ import userRoutes from './routes/userRoutes';
 import scheduledClassRoutes from './routes/scheduleClassRoutes';
 import paymentRoutes from './routes/paymentRoutes';
 import teacherRoutes from './routes/teacherRoutes';
+import messageRoutes from './routes/messageRoutes';
 import testRoutes from "./routes/testRoutes";
 import { isAuth } from './middleware/isAuth';
 import { checkUserMatch } from './middleware/checkUserMatch';
 import connectDB from './database/db'; // Import your connectDB function
-import isAdmin from './middleware/isAdmin';
 
 dotenv.config();
 
@@ -44,6 +44,8 @@ app.use('/api/payments', paymentRoutes);
 
 // Teacher routes without auth
 app.use('/api/teachers', teacherRoutes);
+
+app.use('/api/messages', messageRoutes)
 
 // Middleware to log incoming requests
 app.use((req: Request, res: Response, next: NextFunction) => {
