@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ders Onayı</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .email-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .email-header {
+      background-color: #B671FF; /* ana renk */
+      padding: 20px;
+      color: white;
+      text-align: center;
+    }
+    .email-body {
+      background-color: #f4f4f4 !important;
+      padding: 20px;
+      color: #222222; /* koyu renk */
+    }
+    .email-footer {
+      background-color: #353535; /* footer rengi */
+      padding: 10px;
+      color: white;
+      text-align: center;
+    }
+    .button {
+      background-color: #DB51C2; /* ikincil renk */
+      color: white !important;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+      display: inline-block;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="email-header">
+      <h1>Yoff Akademi</h1>
+      <p>Ders Onayı</p>
+    </div>
+
+    <div class="email-body">
+      <h2>Merhaba {{name}},</h2>
+      <p>Dersiniz başarıyla onaylandı!</p>
+      <p><strong>Dil:</strong> {{language}}</p>
+      <p><strong>Öğretmen:</strong> {{teacher}}</p>
+      <p><strong>Tarih:</strong> {{date}}</p>
+      <p><strong>Saat:</strong> {{time}}</p>
+      <p class="important">Bize katılacağınız için çok heyecanlıyız!</p>
+      <p>Herhangi bir sorunuz için, lütfen şu adresten bizimle iletişime geçmekten çekinmeyin: <a href="mailto:info@yoff.academy" style="color: #B671FF !important; text-decoration: none !important; font-weight: bold;">info@yoff.academy</a></p>
+      
+      <a href="https://yoff.academy" class="button">Yoff Akademi'yi Ziyaret Edin</a>
+    </div>
+
+    <div class="email-footer">
+      <p>&copy; 2024 Yoff Akademi. Tüm hakları saklıdır.</p>
+    </div>
+  </div>
+</body>
+</html>

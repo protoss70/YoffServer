@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class Confirmation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .email-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .email-header {
+      background-color: #B671FF; /* main color */
+      padding: 20px;
+      color: white;
+      text-align: center;
+    }
+    .email-body {
+      background-color: #f4f4f4 !important;
+      padding: 20px;
+      color: #222222; /* dark color */
+    }
+    .email-footer {
+      background-color: #353535; /* footer color */
+      padding: 10px;
+      color: white;
+      text-align: center;
+    }
+    .button {
+      background-color: #DB51C2; /* secondary color */
+      color: white !important;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+      display: inline-block;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="email-header">
+      <h1>Yoff Academy</h1>
+      <p>New Class Confirmation</p>
+    </div>
+
+    <div class="email-body">
+      <h2>Hello {{teacherName}},</h2>
+      <p>You have a new class scheduled!</p>
+      <p><strong>Student:</strong> {{studentFullname}}</p>
+      <p><strong>Student Email:</strong> <a href="mailto:{{studentEmail}}" style="color: #B671FF !important; text-decoration: none !important;">{{studentEmail}}</a></p>
+      <p><strong>Language:</strong> {{language}}</p>
+      <p><strong>Date:</strong> {{date}}</p>
+      <p><strong>Time:</strong> {{time}}</p>
+      <p class="important">We’re looking forward to a great session!</p>
+      <p>For any inquiries, feel free to contact us at <a href="mailto:info@yoff.academy" style="color: #B671FF !important; text-decoration: none !important; font-weight: bold;">info@yoff.academy</a></p>
+      
+      <a href="https://yoff.academy" class="button">Visit Yoff Academy</a>
+    </div>
+
+    <div class="email-footer">
+      <p>&copy; 2024 Yoff Academy. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>

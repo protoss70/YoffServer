@@ -66,7 +66,7 @@ app.use('/api/test', testRoutes);
 }
 
 // Connect to the database and then start the server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 console.log('Attempting database connection');
 console.log('MongoDB URI:', process.env.MONGODB_URI);
 console.log('Port:', process.env.PORT);

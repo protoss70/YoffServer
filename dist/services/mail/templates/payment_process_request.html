@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Awaiting Confirmation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .email-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .email-header {
+      background-color: #B671FF; /* Main color */
+      padding: 20px;
+      color: white;
+      text-align: center;
+    }
+    .email-body {
+      background-color: #f4f4f4 !important;
+      padding: 20px;
+      color: #222222; /* Dark color */
+    }
+    .email-footer {
+      background-color: #353535; /* Footer color */
+      padding: 10px;
+      color: white;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="email-header">
+      <h1>Yoff Academy</h1>
+      <p>User Contact for Payment</p>
+    </div>
+
+    <div class="email-body">
+      <h2>Hello Caner,</h2>
+      <p>A user tried to make a payment for the followiong plan <b>{{plan}}</b></p>
+      <ul>
+        <li><strong>Name:</strong> {{userFullName}}</li>
+        <li><strong>Email:</strong> {{userEmail}}</li>
+      </ul>
+      <p>Please make contact with the user as soon as possible</p>
+      <p>Thank you!</p>
+    </div>
+
+    <div class="email-footer">
+      <p>&copy; 2024 Yoff Academy. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
