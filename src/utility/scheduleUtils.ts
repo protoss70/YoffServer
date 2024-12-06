@@ -18,7 +18,6 @@ export function isDateInTeacherSchedule(teacher: ITeacher, date: string): boolea
 
   // Loop through the teacher's schedule and check if the date exists
   const teacherScheduleDates = getNext3WeeksDates(teacher.schedule, teacher.time_zone);
-  console.log("teacher schedule", teacherScheduleDates);
 
   for (const scheduleDateString of teacherScheduleDates) {
     // Convert each schedule date to a Date object and ensure it's in GMT+0

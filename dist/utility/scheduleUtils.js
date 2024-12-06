@@ -21,7 +21,6 @@ function isDateInTeacherSchedule(teacher, date) {
     const targetMinute = dateGMT0.getUTCMinutes();
     // Loop through the teacher's schedule and check if the date exists
     const teacherScheduleDates = (0, dates_1.getNext3WeeksDates)(teacher.schedule, teacher.time_zone);
-    console.log("teacher schedule", teacherScheduleDates);
     for (const scheduleDateString of teacherScheduleDates) {
         // Convert each schedule date to a Date object and ensure it's in GMT+0
         const scheduleDate = new Date(scheduleDateString);

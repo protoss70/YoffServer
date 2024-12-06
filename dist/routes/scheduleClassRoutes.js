@@ -10,10 +10,11 @@ const scheduleUtils_1 = require("../utility/scheduleUtils");
 const dates_1 = require("../utility/dates");
 const User_1 = __importDefault(require("../models/User"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const emailTemplates_1 = require("../services/mail/emailTemplates");
 const router = express_1.default.Router();
 // Create a Scheduled Class
 router.post('/', async (req, res) => {
-    const { date, teacherId, userId, language } = req.body;
+    const { date, teacherId, userId, language, userLocale } = req.body;
     const isDemoClass = req.query.isDemoClass === "true";
     const userData = res.locals.userData;
     try {
@@ -87,6 +88,27 @@ router.post('/', async (req, res) => {
             isDemoClass: isDemoClass || false,
             language: language,
         });
+        // Send emails to confirm class
+        await Promise.all([
+            (0, emailTemplates_1.confirmClassToTeacher)({
+                email: "info@yoff.academy",
+                studentFullname: userData.fullName,
+                studentEmail: userData.email,
+                language: language,
+                teacherFullname: `${teacherData.name} ${teacherData.surname}`,
+                date: _date.toISOString(),
+                timezone: teacherData.time_zone || "GMT+3"
+            }),
+            (0, emailTemplates_1.confirmClassToUser)({
+                email: userData.email,
+                name: userData.fullName,
+                language: language,
+                teacherFullname: `${teacherData.name} ${teacherData.surname}`,
+                date: date,
+                timezone: userData.timezone,
+                userLocale: userLocale || "en"
+            })
+        ]);
         res.status(201).json({
             success: true,
             newClass,
@@ -102,12 +124,17 @@ router.post('/', async (req, res) => {
 });
 // Delete a Scheduled Class
 router.delete('/:id', async (req, res) => {
-    const { userId, teacherId } = req.body; // Destructure userId and teacherId from the request body
+    const { userId, teacherId, userLocale } = req.body; // Destructure userId and teacherId from the request body
     const { id } = req.params; // Get the class ID from the URL parameter
+    const userData = res.locals.userData;
     try {
         // Validate ObjectIds
         if (!mongoose_1.default.Types.ObjectId.isValid(teacherId) || !mongoose_1.default.Types.ObjectId.isValid(userId)) {
             return res.status(400).json({ success: false, message: 'Invalid teacherId or userId' });
+        }
+        const teacherData = await Teacher_1.default.findById(teacherId);
+        if (!teacherData) {
+            return res.status(404).json({ message: 'Teacher not found' });
         }
         // Find the scheduled class that matches the user and teacher
         const scheduledClass = await ScheduleClass_1.default.findOne({
@@ -137,6 +164,29 @@ router.delete('/:id', async (req, res) => {
         }
         // Delete the scheduled class
         await ScheduleClass_1.default.findByIdAndDelete(id);
+        // Send emails to confirm class
+        await Promise.all([
+            (0, emailTemplates_1.confirmClassCancellationToTeacher)({
+                email: "info@yoff.academy",
+                studentFullname: userData.fullName,
+                studentEmail: userData.email,
+                language: scheduledClass.language,
+                teacherFullname: `${teacherData.name} ${teacherData.surname}`,
+                date: scheduledClass.date.toISOString(),
+                timezone: teacherData.time_zone || "GMT+3",
+                userLocale: "en"
+            }),
+            (0, emailTemplates_1.confirmClassCancellationToStudent)({
+                email: userData.email,
+                studentEmail: userData.email,
+                studentFullname: userData.fullName,
+                language: scheduledClass.language,
+                teacherFullname: `${teacherData.name} ${teacherData.surname}`,
+                date: scheduledClass.date.toISOString(),
+                timezone: userData.timezone,
+                userLocale: userLocale || "en"
+            })
+        ]);
         res.status(200).json({
             success: true,
             message: 'Scheduled class deleted successfully',
