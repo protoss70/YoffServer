@@ -91,7 +91,7 @@ router.post('/', async (req, res) => {
         // Send emails to confirm class
         await Promise.all([
             (0, emailTemplates_1.confirmClassToTeacher)({
-                email: "info@yoff.academy",
+                email: teacherData.email,
                 studentFullname: userData.fullName,
                 studentEmail: userData.email,
                 language: language,
@@ -167,7 +167,7 @@ router.delete('/:id', async (req, res) => {
         // Send emails to confirm class
         await Promise.all([
             (0, emailTemplates_1.confirmClassCancellationToTeacher)({
-                email: "info@yoff.academy",
+                email: teacherData.email,
                 studentFullname: userData.fullName,
                 studentEmail: userData.email,
                 language: scheduledClass.language,
