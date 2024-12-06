@@ -8,6 +8,7 @@ export interface IScheduleClass extends Document {
   user: Types.ObjectId;    // Reference to a user's ObjectId
   isCompleted: boolean;
   isDemoClass?: boolean;
+  language: string;
 }
 
 // Create the ScheduledClass schema

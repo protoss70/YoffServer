@@ -10,6 +10,7 @@ interface ConfirmationStudentEmail {
   teacherFullname: string;
   date: string;  // ISO string format
   timezone: GMTOffset;  // Timezone (e.g., 'Europe/Budapest')
+  userLocale: string;
 }
 
 interface PaymentConfirmationParams {
@@ -38,6 +39,7 @@ interface CancellationEmailParams {
   teacherFullname: string;
   date: string;  // ISO string format
   timezone: GMTOffset;  // Timezone
+  userLocale: string;
 }
 
 interface MessageEmailParams {
@@ -76,13 +78,15 @@ function formatDateTime(dateString: string, gmtOffset: string) {
 }
 
 export async function confirmClassToUser(params: ConfirmationStudentEmail) {
-  const { email, name, language, teacherFullname, date, timezone } = params;
+  const { email, name, language, teacherFullname, date, timezone, userLocale } = params;
 
   const transport = await createTransport();
 
+  const _userLocale = ["en", "tr"].includes(userLocale) ? userLocale : "en";
+    
   const { formattedDate, formattedTime } = formatDateTime(date, timezone);
 
-  const emailTemplatePath = path.join(__dirname, './templates/confirmation_email.html');
+  const emailTemplatePath = path.join(__dirname, `./templates/user_class_confirmation/confirmation_email_user_${_userLocale}.html`);
   const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
   
   const htmlContent = emailTemplate
@@ -174,13 +178,15 @@ export async function confirmClassCancellationToTeacher(params: CancellationEmai
 }
 
 export async function confirmClassCancellationToStudent(params: CancellationEmailParams) {
-  const { email, studentFullname, teacherFullname, language, studentEmail, date, timezone } = params;
+  const { email, studentFullname, teacherFullname, language, studentEmail, date, timezone, userLocale } = params;
 
   const transport = await createTransport();
 
+  const _userLocale = ["en", "tr"].includes(userLocale) ? userLocale : "en";
+
   const { formattedDate, formattedTime } = formatDateTime(date, timezone);
 
-  const emailTemplatePath = path.join(__dirname, './templates/class_canceled_user.html');
+  const emailTemplatePath = path.join(__dirname, `./templates/user_class_cancellation/class_canceled_user_${_userLocale}.html`);
   const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
   
   let htmlContent = emailTemplate
