@@ -6,11 +6,12 @@ import { processRequestDate, isValidDate } from '../utility/dates';
 import User from '../models/User';
 import mongoose from 'mongoose';
 import { confirmClassCancellationToStudent, confirmClassCancellationToTeacher, confirmClassToTeacher, confirmClassToUser } from '../services/mail/emailTemplates';
+import { isEmailVerified } from '../middleware/isEmailVerified';
 
 const router = express.Router();
 
 // Create a Scheduled Class
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', isEmailVerified, async (req: Request, res: Response) => {
   const { date, teacherId, userId, language, userLocale } = req.body;
   const isDemoClass =  req.query.isDemoClass === "true";
   const userData = res.locals.userData;
@@ -99,7 +100,7 @@ router.post('/', async (req: Request, res: Response) => {
     // Send emails to confirm class
     await Promise.all([
       confirmClassToTeacher({
-        email: teacherData.email,
+        email: "info@yoff.academy",
         studentFullname: userData.fullName,
         studentEmail: userData.email,
         language: language,

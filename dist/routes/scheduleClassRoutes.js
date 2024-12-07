@@ -11,9 +11,10 @@ const dates_1 = require("../utility/dates");
 const User_1 = __importDefault(require("../models/User"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const emailTemplates_1 = require("../services/mail/emailTemplates");
+const isEmailVerified_1 = require("../middleware/isEmailVerified");
 const router = express_1.default.Router();
 // Create a Scheduled Class
-router.post('/', async (req, res) => {
+router.post('/', isEmailVerified_1.isEmailVerified, async (req, res) => {
     const { date, teacherId, userId, language, userLocale } = req.body;
     const isDemoClass = req.query.isDemoClass === "true";
     const userData = res.locals.userData;
@@ -91,7 +92,7 @@ router.post('/', async (req, res) => {
         // Send emails to confirm class
         await Promise.all([
             (0, emailTemplates_1.confirmClassToTeacher)({
-                email: teacherData.email,
+                email: "info@yoff.academy",
                 studentFullname: userData.fullName,
                 studentEmail: userData.email,
                 language: language,

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ders İptali</title>
+  <title>Email Doğrulama</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -28,7 +28,7 @@
       color: #222222; /* koyu renk */
     }
     .email-footer {
-      background-color: #353535; /* footer rengi */
+      background-color: #353535; /* altbilgi rengi */
       padding: 10px;
       color: white;
       text-align: center;
@@ -45,33 +45,26 @@
     }
     .important {
       font-weight: bold;
-      font-size: 16px;
-      margin-top: 20px;
-    }
-    .emoji {
-      font-size: 24px;
     }
   </style>
 </head>
 <body>
   <div class="email-container">
     <div class="email-header">
-      <h1>Yoff Akademi</h1>
-      <p>Ders İptal Onayı</p>
+      <h1>Yoff Academy</h1>
+      <p>Email Doğrulama</p>
     </div>
 
     <div class="email-body">
-      <h2>Merhaba {{studentFullname}},</h2>
-      <p>{{teacherName}} ile olan dersiniz isteğiniz üzerine <strong>iptal edilmiştir</strong> 😢.</p>
-      <p>Krediniz tamamen iade edilmiştir ve dilediğiniz zaman yeni bir ders planlayabilirsiniz.</p>
-      <p>Programınıza uygun yeni bir zaman dilimi seçmek için web sitemizi ziyaret edebilirsiniz.</p>
-      <p class="important">Herhangi bir sorunuz varsa, lütfen bize şu adresten ulaşmaktan çekinmeyin: <a href="mailto:info@yoff.academy" style="color: #B671FF !important; text-decoration: none !important; font-weight: bold;">info@yoff.academy</a>.</p>
-      
-      <a href="https://yoff.academy" class="button">Yoff Akademi'yi Ziyaret Edin</a>
+      <h2>Merhaba {{fullName}},</h2>
+      <p>Yoff Academy'ye kaydolduğunuz için teşekkür ederiz! Kaydınızı tamamlamak ve e-posta adresinizi doğrulamak için lütfen aşağıdaki bağlantıya tıklayın:</p>
+      <p><a href="https://yoff.academy/email-verification?verificationCode={{verificationCode}}" class="button">E-postanızı Doğrulayın</a></p>
+      <p class="important">Eğer bizimle bir hesap oluşturmadıysanız, bu e-postayı görmezden gelebilirsiniz.</p>
+      <p>Herhangi bir sorunuz için bize <a href="mailto:info@yoff.academy" style="color: #B671FF !important; text-decoration: none !important; font-weight: bold;">info@yoff.academy</a> adresinden ulaşabilirsiniz.</p>
     </div>
 
     <div class="email-footer">
-      <p>&copy; 2024 Yoff Akademi. Tüm hakları saklıdır.</p>
+      <p>&copy; 2024 Yoff Academy. Tüm hakları saklıdır.</p>
     </div>
   </div>
 </body>

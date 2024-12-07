@@ -34,7 +34,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // Use user routes
-app.use('/api/users', isAuth, userRoutes);
+app.use('/api/users', userRoutes);
 
 // Use scheduled class routes
 app.use('/api/scheduleClasses', isAuth, checkUserMatch, scheduledClassRoutes);

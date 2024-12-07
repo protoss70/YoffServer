@@ -13,6 +13,13 @@ interface ConfirmationStudentEmail {
   userLocale: string;
 }
 
+interface VerificationEmailParams {
+  email: string;
+  fullName: string;
+  verificationCode: string;
+  userLocale: string;
+}
+
 interface PaymentConfirmationParams {
   email: string;
   studentFullname: string;
@@ -295,6 +302,41 @@ export async function paymentAwaitingProcessing(params: { studentFullName: strin
   try {
     await transport.sendMail(mailOptions);
     console.log(`Payment awaiting confirmation email sent to Caner`);
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+}
+
+
+export async function sendVerificationEmail(params: VerificationEmailParams) {
+  const { email, fullName, verificationCode, userLocale } = params;
+
+  // Create email transport
+  const transport = await createTransport();
+
+  // Determine the user's locale (default to 'en' if not valid)
+  const _userLocale = ["en", "tr"].includes(userLocale) ? userLocale : "en";
+    
+  // Path to the email template
+  const emailTemplatePath = path.join(__dirname, `./templates/user_verification_email/user_verification_email_${_userLocale}.html`);
+  const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
+  
+  // Replace template placeholders with actual data
+  const htmlContent = emailTemplate
+    .replace('{{fullName}}', fullName || '')
+    .replace('{{verificationCode}}', verificationCode);
+
+  // Prepare email options
+  const mailOptions = {
+    from: '"Yoff Academy" <no-reply@yoff.academy>',
+    to: email,
+    subject: 'Email Verification for Yoff Academy',
+    html: htmlContent,
+  };
+
+  try {
+    await transport.sendMail(mailOptions);
+    console.log(`Verification email sent to ${email}`);
   } catch (error) {
     console.error('Error sending email:', error);
   }

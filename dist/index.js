@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
     res.status(200).json({ message: 'Welcome to my TypeScript REST API' });
 });
 // Use user routes
-app.use('/api/users', isAuth_1.isAuth, userRoutes_1.default);
+app.use('/api/users', userRoutes_1.default);
 // Use scheduled class routes
 app.use('/api/scheduleClasses', isAuth_1.isAuth, checkUserMatch_1.checkUserMatch, scheduleClassRoutes_1.default);
 // Use payment routes
@@ -56,8 +56,8 @@ if (process.env.ENVIRONMENT === "DEVELOPMENT") {
     app.use('/api/test', testRoutes_1.default);
 }
 // Connect to the database and then start the server
-const PORT = process.env.PORT || 3000;
-console.log('Attempting database connection');
+const PORT = process.env.PORT || 3001;
+console.log('Attempting database connection!');
 console.log('MongoDB URI:', process.env.MONGODB_URI);
 console.log('Port:', process.env.PORT);
 (0, db_1.default)().then(() => {

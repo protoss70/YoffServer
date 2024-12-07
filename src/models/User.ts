@@ -9,6 +9,7 @@ export interface IUser extends Document {
   demoClass?: Date; // Optional field
   timezone: GMTOffset;
   fullName?: string; 
+  verificationCode?: string; // Optional field for verification code
 }
 
 // Create the User schema
@@ -28,7 +29,7 @@ const UserSchema: Schema = new Schema({
   emailVerified: {
     type: Boolean,
     required: true,
-    default: false
+    default: false,
   },
   demoClass: {
     type: Date,
@@ -41,7 +42,11 @@ const UserSchema: Schema = new Schema({
   fullName: {
     type: String,
     required: false,
-  }
+  },
+  verificationCode: {
+    type: String,
+    required: false, // Optional: can be null initially, set during registration or when requesting verification
+  },
 });
 
 // Create the User model

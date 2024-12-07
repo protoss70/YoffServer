@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Class Cancellation</title>
+  <title>Email Verification</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -45,11 +45,6 @@
     }
     .important {
       font-weight: bold;
-      font-size: 16px;
-      margin-top: 20px;
-    }
-    .emoji {
-      font-size: 24px;
     }
   </style>
 </head>
@@ -57,17 +52,15 @@
   <div class="email-container">
     <div class="email-header">
       <h1>Yoff Academy</h1>
-      <p>Class Cancellation Confirmation</p>
+      <p>Email Verification</p>
     </div>
 
     <div class="email-body">
-      <h2>Hello {{studentFullname}},</h2>
-      <p>Your class with {{teacherName}} has been <strong>cancelled</strong> as per your request 😢.</p>
-      <p>Your credit has been fully refunded, and you are welcome to schedule another class at any time.</p>
-      <p>Feel free to visit our website to pick a new time slot that fits your schedule.</p>
-      <p class="important">If you have any questions, please don’t hesitate to contact us at <a href="mailto:info@yoff.academy" style="color: #B671FF !important; text-decoration: none !important; font-weight: bold;">info@yoff.academy</a>.</p>
-      
-      <a href="https://yoff.academy" class="button">Visit Yoff Academy</a>
+      <h2>Hello {{fullName}},</h2>
+      <p>Thank you for registering with Yoff Academy! To complete your registration and verify your email address, please click the link below:</p>
+      <p><a href="https://yoff.academy/email-verification?verificationCode={{verificationCode}}" class="button">Verify Your Email</a></p>
+      <p class="important">If you did not create an account with us, please ignore this email.</p>
+      <p>For any inquiries, feel free to contact us at <a href="mailto:info@yoff.academy" style="color: #B671FF !important; text-decoration: none !important; font-weight: bold;">info@yoff.academy</a></p>
     </div>
 
     <div class="email-footer">

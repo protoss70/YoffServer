@@ -10,6 +10,7 @@ exports.confirmClassCancellationToStudent = confirmClassCancellationToStudent;
 exports.sendMessageToTeacher = sendMessageToTeacher;
 exports.confirmPaymentReceived = confirmPaymentReceived;
 exports.paymentAwaitingProcessing = paymentAwaitingProcessing;
+exports.sendVerificationEmail = sendVerificationEmail;
 const mailer_1 = require("./mailer");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
@@ -211,6 +212,34 @@ async function paymentAwaitingProcessing(params) {
     try {
         await transport.sendMail(mailOptions);
         console.log(`Payment awaiting confirmation email sent to Caner`);
+    }
+    catch (error) {
+        console.error('Error sending email:', error);
+    }
+}
+async function sendVerificationEmail(params) {
+    const { email, fullName, verificationCode, userLocale } = params;
+    // Create email transport
+    const transport = await (0, mailer_1.createTransport)();
+    // Determine the user's locale (default to 'en' if not valid)
+    const _userLocale = ["en", "tr"].includes(userLocale) ? userLocale : "en";
+    // Path to the email template
+    const emailTemplatePath = path_1.default.join(__dirname, `./templates/user_verification_email/user_verification_email_${_userLocale}.html`);
+    const emailTemplate = fs_1.default.readFileSync(emailTemplatePath, 'utf8');
+    // Replace template placeholders with actual data
+    const htmlContent = emailTemplate
+        .replace('{{fullName}}', fullName || '')
+        .replace('{{verificationCode}}', verificationCode);
+    // Prepare email options
+    const mailOptions = {
+        from: '"Yoff Academy" <no-reply@yoff.academy>',
+        to: email,
+        subject: 'Email Verification for Yoff Academy',
+        html: htmlContent,
+    };
+    try {
+        await transport.sendMail(mailOptions);
+        console.log(`Verification email sent to ${email}`);
     }
     catch (error) {
         console.error('Error sending email:', error);

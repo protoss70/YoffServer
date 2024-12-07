@@ -41,7 +41,7 @@ const UserSchema = new mongoose_1.Schema({
     emailVerified: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
     },
     demoClass: {
         type: Date,
@@ -54,7 +54,11 @@ const UserSchema = new mongoose_1.Schema({
     fullName: {
         type: String,
         required: false,
-    }
+    },
+    verificationCode: {
+        type: String,
+        required: false, // Optional: can be null initially, set during registration or when requesting verification
+    },
 });
 // Create the User model
 const User = mongoose_1.default.model('User', UserSchema);
